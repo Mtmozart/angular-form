@@ -1,27 +1,93 @@
-# Memoteca
+Formulário reativo - primeira coisa, importar o módulo de formulário reativo.
+` ReactiveFormsModule` dentro de imports
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.3.
+Criando manualmente: Você cria um FormGroup e um FormControl para cada campo do formulário.
 
-## Development server
+```typescript
+  formulario!: FormGroup;
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+ngOnInit(): void {
+    this.formulario = new FormGroup({
+      conteudo: new FormControl(''),
+      autoria: new FormControl(''),
+      modelo: new FormControl('')
+    })
+  }
+```
 
-## Code scaffolding
+Usando o FormBuilder: O FormBuilder simplifica a criação dos formulários, atribuindo os controles aos campos automaticamente.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```typescript
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+ngOnInit(): void {
+    this.formulario = this.formBuilder.group({
+      conteudo: [''],
+      autoria: [''],
+      modelo: ['']
+    })
+  }
 
-## Running unit tests
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Como vincular ?
+Basta por no formulário a seguinte anotação:
+`<form [formGroup]="formulario">`
+e usar a propriedade formControlName para fazer associação de valores:
 
-## Running end-to-end tests
+```typescript
+<form [formGroup]="formulario">
+    <label for="pensamento">Pensamento</label>
+    <input
+      type="text"
+      class="input"
+      id="pensamento"
+      formControlName="conteudo"
+      placeholder="Digite o pensamento"
+    >
+  //Passando conteúdo do formulário
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+   <p class="conteudo">{{ formulario.get('contedo')?.value }}</p>
+   <p class="autoria"><b>{{ formulario.get('autoria')?.value }}</b></p>
+```
 
-## Further help
+# Validação de usuário
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Aplicar validator é simples, apenas utilizar a classe Validator e dentro do array passar os parâmetros que quero.
+
+```typescript
+
+
+<form [formGroup]="formulario">
+    <label for="pensamento">Pensamento</label>
+    <input
+      type="text"
+      class="input"
+      id="pensamento"
+      formControlName="conteudo"
+      placeholder="Digite o pensamento"
+    >
+
+```
+
+Outros validadores:
+Validators.min()
+Validador que exige que o valor do controle seja maior ou igual ao número fornecido.
+
+    Validators.max()
+        Validador que exige que o valor do controle seja menor ou igual ao número fornecido.
+
+    Validators.requiredTrue()
+        Validador que exige que o valor do controle seja verdadeiro. Este validador é comumente usado para caixas de seleção obrigatórias.
+
+    Validators.email()
+        Validador que exige que o valor do controle passe em um teste de validação de email.
+
+    Validators.maxLength()
+        Validador que exige que o comprimento do valor do controle seja menor ou igual ao tamanho máximo fornecido.
+
+    Validators.nullValidator()
+        Validador de valores nulos.
+
+    Validators.composeAsync()
+        Compõe vários validadores assíncronos em uma única função que retorna a união dos objetos de erro individuais para o controle fornecido.
